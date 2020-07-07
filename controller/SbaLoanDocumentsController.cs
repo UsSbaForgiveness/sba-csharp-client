@@ -29,5 +29,12 @@ namespace sbaCSharpClient.controller
             Task<LoanDocument> document = sbaLoanDocumentService.submitLoanDocument(request, loanDocumentsUrl);
             return document;
         }
+        
+        public Task<LoanDocumentType> getSbaLoanDocumentTypeById(int id, string loanDocumentsUrl)
+        {
+            Console.WriteLine("Submit Loan Document.");
+            Task<LoanDocumentType> document = sbaLoanDocumentService.getSbaLoanDocumentTypeById(id, loanDocumentsUrl);
+            return document;
+        }
     }
 }

@@ -6,16 +6,16 @@ namespace sbaCSharpClient.domain
 	public class SbaPPPLoanForgivenessStatusResponse
     {
 
-        private int count;
+        public int count{ get; set;}
 
-        private int next;
+        public string next{ get; set;}
 
-        private int previous;
+        public string previous{ get; set;}
 
-        private List<SbaPPPLoanForgiveness> results;
+        public List<SbaPPPLoanForgiveness> results{ get; set;}
 
-        private DateTime created;
+        public DateTime created{ get; set;}
 
-        private string assigned_to_user;
+        public string assigned_to_user{ get; set;}
     }
 }

@@ -26,5 +26,11 @@ namespace sbaCSharpClient.service
             Console.WriteLine("Retreiving Sba Loan Document Types");
             return sbaRestApiClient.getSbaLoanDocumentTypes(reqParams, loanDocumentTypesUrl);
         }
+        
+        public Task<LoanDocumentType> getSbaLoanDocumentTypeById(int id, string loanDocumentTypesUrl)
+        {
+            Console.WriteLine("Retreiving Sba Loan Document Types");
+            return sbaRestApiClient.getSbaLoanDocumentTypeById(id, loanDocumentTypesUrl);
+        }
     }
 }

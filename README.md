@@ -42,7 +42,7 @@ and continue with Step 3.
 
 # This is a GET API Call to retrieve Sba PPP Loan Forgiveness details submitted in Step 1.
 
-SbaLoanForgivenessService.getLoanStatus(int page)
+SbaLoanForgivenessService.getLoanStatus(int page, string sbaNumber)
 
  page is a query parameter ex: 1,2 etc
 

@@ -14,7 +14,9 @@ namespace sbaCSharpClient.restclient
         private readonly string apiToken;
 
         private readonly string vendorKey;
-        
+
+        private const string VENDOR_KEY = "Vendor-Key";
+
         public SbaRestApiClient(string BaseUri, string ApiToken, string VendorKey)
         {
             baseUri = BaseUri;
@@ -32,7 +34,7 @@ namespace sbaCSharpClient.restclient
                 restClient.Timeout = -1;
                 RestRequest restRequest = new RestRequest(Method.POST);
                 restRequest.AddHeader("Authorization", apiToken);
-                restRequest.AddHeader("Vendor-Key", vendorKey);
+                restRequest.AddHeader(VENDOR_KEY, vendorKey);
                 restRequest.AddHeader("Content-Type", "application/json");
                 restRequest.AddParameter("application/json", serialized, ParameterType.RequestBody);
                 IRestResponse response = await restClient.ExecuteAsync(restRequest);
@@ -62,7 +64,7 @@ namespace sbaCSharpClient.restclient
                 restClient.Timeout = -1;
                 RestRequest restRequest = new RestRequest(Method.POST);
                 restRequest.AddHeader("Authorization", apiToken);
-                restRequest.AddHeader("Vendor-Key", vendorKey);
+                restRequest.AddHeader(VENDOR_KEY, vendorKey);
                 restRequest.AddHeader("Content-Type", "application/json");
                 restRequest.AddParameter("application/json", serialized, ParameterType.RequestBody);
                 IRestResponse response = await restClient.ExecuteAsync(restRequest);
@@ -82,7 +84,7 @@ namespace sbaCSharpClient.restclient
             }
         }
 
-        public async Task<LoanDocumentType> getSbaLoanForgiveness(int pageNumber, string loanForgivenessUrl)
+        public async Task<SbaPPPLoanDocumentTypeResponse> getSbaLoanForgiveness(int pageNumber, string sbaNumber, string loanForgivenessUrl)
         {
             try
             {
@@ -90,19 +92,23 @@ namespace sbaCSharpClient.restclient
                 {
                     throw new Exception("Incorrect input data. please investigate");
                 }
+                
+                string baseUrl = !string.IsNullOrEmpty(sbaNumber)
+                    ? $"{baseUri}/{loanForgivenessUrl}?pageNumber={pageNumber}&sbaNumber={sbaNumber}"
+                    : $"{baseUri}/{loanForgivenessUrl}?pageNumber={pageNumber}";
 
-                RestClient restClient = new RestClient($"{baseUri}/{loanForgivenessUrl}/{pageNumber}/");
+                RestClient restClient = new RestClient(baseUrl);
                 restClient.Timeout = -1;
                 RestRequest restRequest = new RestRequest(Method.GET);
                 restRequest.AddHeader("Authorization", apiToken);
-                restRequest.AddHeader("Vendor-Key", vendorKey);
+                restRequest.AddHeader(VENDOR_KEY, vendorKey);
                 restRequest.AddHeader("Content-Type", "application/json");
                 IRestResponse restResponse = await restClient.ExecuteAsync(restRequest);
 
                 if (restResponse.IsSuccessful)
                 {
-                    LoanDocumentType loanDocumentType = JsonConvert.DeserializeObject<LoanDocumentType>(restResponse.Content);
-                    return loanDocumentType;
+                    SbaPPPLoanDocumentTypeResponse loanDocumentTypeResponse = JsonConvert.DeserializeObject<SbaPPPLoanDocumentTypeResponse>(restResponse.Content);
+                    return loanDocumentTypeResponse;
                 }
                 throw new Exception($"Did not receive success code. please investigate. received response code: {restResponse.StatusCode}");
             }
@@ -111,6 +117,101 @@ namespace sbaCSharpClient.restclient
                 Console.WriteLine($"{Environment.NewLine}{exception.Message}{Environment.NewLine}");
                 Console.WriteLine("------------------------------------------------------------------------"); 
                 return null;
+            }
+        }
+        
+        public async Task<SbaPPPLoanForgiveness> getSbaLoanForgiveness(string sbaNumber, string loanForgivenessUrl)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(sbaNumber))
+                {
+                    throw new Exception("Incorrect input data. please investigate");
+                }
+                
+                RestClient restClient = new RestClient($"{baseUri}/{loanForgivenessUrl}?sbaNumber={sbaNumber}");
+                restClient.Timeout = -1;
+                RestRequest restRequest = new RestRequest(Method.GET);
+                restRequest.AddHeader("Authorization", apiToken);
+                restRequest.AddHeader(VENDOR_KEY, vendorKey);
+                restRequest.AddHeader("Content-Type", "application/json");
+                IRestResponse restResponse = await restClient.ExecuteAsync(restRequest);
+
+                if (restResponse.IsSuccessful)
+                {
+                    SbaPPPLoanForgiveness sbaLoanForgiveness = JsonConvert.DeserializeObject<SbaPPPLoanForgiveness>(restResponse.Content);
+                    return sbaLoanForgiveness;
+                }
+                throw new Exception($"Did not receive success code. please investigate. received response code: {restResponse.StatusCode}");
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine($"{Environment.NewLine}{exception.Message}{Environment.NewLine}");
+                Console.WriteLine("------------------------------------------------------------------------"); 
+                return null;
+            }
+        }
+
+        public async Task<SbaPPPLoanForgiveness> getSbaLoanForgivenessBySlug(string slug, string loanForgivenessUrl)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(slug))
+                {
+                    throw new Exception("Incorrect input data. please investigate");
+                }
+
+                RestClient restClient = new RestClient($"{baseUri}/{loanForgivenessUrl}?slug={slug}");
+                restClient.Timeout = -1;
+                RestRequest restRequest = new RestRequest(Method.GET);
+                restRequest.AddHeader("Authorization", apiToken);
+                restRequest.AddHeader(VENDOR_KEY, vendorKey);
+                restRequest.AddHeader("Content-Type", "application/json");
+                IRestResponse restResponse = await restClient.ExecuteAsync(restRequest);
+
+                if (restResponse.IsSuccessful)
+                {
+                    SbaPPPLoanForgiveness sbaLoanForgiveness = JsonConvert.DeserializeObject<SbaPPPLoanForgiveness>(restResponse.Content);
+                    return sbaLoanForgiveness;
+                }
+                throw new Exception($"Did not receive success code. please investigate. received response code: {restResponse.StatusCode}");
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine($"{Environment.NewLine}{exception.Message}{Environment.NewLine}");
+                Console.WriteLine("------------------------------------------------------------------------");
+                return null;
+            }
+        }
+
+        public async void deleteSbaLoanForgiveness(string slug, string loanForgivenessUrl)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(slug))
+                {
+                    throw new Exception("Incorrect input data. please investigate");
+                }
+
+                RestClient restClient = new RestClient($"{baseUri}/{loanForgivenessUrl}?slug={slug}");
+                restClient.Timeout = -1;
+                RestRequest restRequest = new RestRequest(Method.DELETE);
+                restRequest.AddHeader("Authorization", apiToken);
+                restRequest.AddHeader(VENDOR_KEY, vendorKey);
+                restRequest.AddHeader("Content-Type", "application/json");
+                IRestResponse restResponse = await restClient.ExecuteAsync(restRequest);
+
+                if (restResponse.IsSuccessful)
+                {
+                    Console.WriteLine($"{Environment.NewLine}Delete was successful{Environment.NewLine}");
+                    Console.WriteLine("------------------------------------------------------------------------");
+                }
+                throw new Exception($"Did not receive success code. please investigate. received response code: {restResponse.StatusCode}");
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine($"{Environment.NewLine}{exception.Message}{Environment.NewLine}");
+                Console.WriteLine("------------------------------------------------------------------------");
             }
         }
         
@@ -128,7 +229,7 @@ namespace sbaCSharpClient.restclient
                 restClient.Timeout = -1;
                 RestRequest restRequest = new RestRequest(Method.GET);
                 restRequest.AddHeader("Authorization", apiToken);
-                restRequest.AddHeader("Vendor-Key", vendorKey);
+                restRequest.AddHeader(VENDOR_KEY, vendorKey);
                 restRequest.AddHeader("Content-Type", "application/json");
                 restRequest.AddParameter("application/json", serialized, ParameterType.RequestBody);
                 IRestResponse restResponse = await restClient.ExecuteAsync(restRequest);
@@ -147,5 +248,38 @@ namespace sbaCSharpClient.restclient
                 return null;
             }
         }
+
+        public async Task<LoanDocumentType> getSbaLoanDocumentTypeById(int id, string loanForgivenessUrl)
+        {
+            try
+            {
+                if (id <= 0)
+                {
+                    throw new Exception("Incorrect input data. please investigate");
+                }
+
+                RestClient restClient = new RestClient($"{baseUri}/{loanForgivenessUrl}?id={id}");
+                restClient.Timeout = -1;
+                RestRequest restRequest = new RestRequest(Method.GET);
+                restRequest.AddHeader("Authorization", apiToken);
+                restRequest.AddHeader(VENDOR_KEY, vendorKey);
+                restRequest.AddHeader("Content-Type", "application/json");
+                IRestResponse restResponse = await restClient.ExecuteAsync(restRequest);
+
+                if (restResponse.IsSuccessful)
+                {
+                    LoanDocumentType loanDocumentType = JsonConvert.DeserializeObject<LoanDocumentType>(restResponse.Content);
+                    return loanDocumentType;
+                }
+                throw new Exception($"Did not receive success code. please investigate. received response code: {restResponse.StatusCode}");
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine($"{Environment.NewLine}{exception.Message}{Environment.NewLine}");
+                Console.WriteLine("------------------------------------------------------------------------");
+                return null;
+            }
+        }
+
     }
 }

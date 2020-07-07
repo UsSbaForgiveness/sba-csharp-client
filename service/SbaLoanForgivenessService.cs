@@ -20,10 +20,22 @@ namespace sbaCSharpClient.service
             return sbaRestApiClient.invokeSbaLoanForgiveness(request, loanForgivenessUrl);
         }
 
-        public Task<LoanDocumentType> getLoanStatus(int page, string loanForgivenessUrl)
+        public Task<SbaPPPLoanDocumentTypeResponse> getLoanStatus(int page, string sbaNumber, string loanForgivenessUrl)
         {
             Console.WriteLine("Retreiving Sba Loan Forgiveness request");
-            return sbaRestApiClient.getSbaLoanForgiveness(page, loanForgivenessUrl);
+            return sbaRestApiClient.getSbaLoanForgiveness(page, sbaNumber, loanForgivenessUrl);
+        }
+        
+        public Task<SbaPPPLoanForgiveness> getSbaLoanForgiveness(string sbaNumber, string loanForgivenessUrl)
+        {
+            Console.WriteLine("Retreiving Sba Loan Forgiveness request");
+            return sbaRestApiClient.getSbaLoanForgiveness(sbaNumber, loanForgivenessUrl);
+        }
+        
+        public Task<SbaPPPLoanForgiveness> getSbaLoanForgivenessBySlug(string slug, string loanForgivenessUrl)
+        {
+            Console.WriteLine("Retreiving Sba Loan Forgiveness request");
+            return sbaRestApiClient.getSbaLoanForgivenessBySlug(slug, loanForgivenessUrl);
         }
     }
 }

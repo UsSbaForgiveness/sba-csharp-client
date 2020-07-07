@@ -21,10 +21,24 @@ namespace sbaCSharpClient.controller
             return response;
         }
 
-        public Task<LoanDocumentType> getSbaLoanRequestStatus(int page, string loanForgivenessUrl)
+        public Task<SbaPPPLoanDocumentTypeResponse> getSbaLoanRequestStatus(int page, string sbaNumber, string loanForgivenessUrl)
         {
             Console.WriteLine("Get Request Received.");
-            Task<LoanDocumentType> response = sbaLoanForgivenessService.getLoanStatus(page, loanForgivenessUrl);
+            Task<SbaPPPLoanDocumentTypeResponse> response = sbaLoanForgivenessService.getLoanStatus(page, sbaNumber, loanForgivenessUrl);
+            return response;
+        }
+        
+        public Task<SbaPPPLoanForgiveness> getSbaLoanForgiveness(string sbaNumber, string loanForgivenessUrl)
+        {
+            Console.WriteLine("Get Request Received.");
+            Task<SbaPPPLoanForgiveness> response = sbaLoanForgivenessService.getSbaLoanForgiveness(sbaNumber, loanForgivenessUrl);
+            return response;
+        }
+        
+        public Task<SbaPPPLoanForgiveness> getSbaLoanForgivenessBySlug(string slug, string loanForgivenessUrl)
+        {
+            Console.WriteLine("Get Request Received.");
+            Task<SbaPPPLoanForgiveness> response = sbaLoanForgivenessService.getSbaLoanForgivenessBySlug(slug, loanForgivenessUrl);
             return response;
         }
     }

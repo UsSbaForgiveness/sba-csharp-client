@@ -7,9 +7,9 @@ namespace sbaCSharpClient.domain
 
         public int count{ get; set;}
 
-        public int? next{ get; set;}
+        public string next{ get; set;}
 
-        public int? previous{ get; set;}
+        public string previous{ get; set;}
 
         public List<LoanDocumentType> results{ get; set;}
 

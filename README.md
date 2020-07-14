@@ -1,6 +1,6 @@
 **C# Client Code Usage**
 
-Please refer [Swagger URL](https://sandbox.ussbaforgiveness.com/api-docs/) for any clarifications related to API request/response attributes.
+Please refer [API Dictionary URL](https://ussbaforgiveness.github.io/API-Dictionary.html/) for any clarifications related to API request/response attributes.
 
 C# Client code is provided to make it easier to integrate to SBA APIs.
 
@@ -30,7 +30,7 @@ You need to populate SbaPPPLoanForgiveness Request object with all the informati
 
 Response is same as Request Object &quot;SbaPPPLoanForgiveness&quot; with id and slug are populated.
 
-Please refer Document - Field mapping diagrams provided in the Wiki Page: https://github.com/UsSbaForgiveness/SBAPPPForgiveness/wiki
+Please refer Document - Field mapping diagrams provided in the API Page: https://ussbaforgiveness.github.io/
 
 # **Note**
 
@@ -60,7 +60,7 @@ b. Need Document Type
 
 SbaLoanDocumentService.getDocumentTypes(Dictionary\&lt;String, String\&gt; reqParams)
 
-\* reqParams -\&gt; Please refer GET Document Types API Swagger at #[Swagger URL](https://sandbox.ussbaforgiveness.com/api-docs/)
+\* reqParams -\&gt; Please refer GET Document Types API Swagger at #[API Dictionary URL](https://ussbaforgiveness.github.io/API-Dictionary.html)
 
 This is a POST API call to upload documents.
 

@@ -25,6 +25,9 @@ namespace sbaCSharpClient
                 SbaLoanForgivenessController sbaLoanForgiveness =
                     new SbaLoanForgivenessController(new SbaLoanForgivenessService(new SbaRestApiClient(baseUri, apiToken, vendorKey)));
 
+                SbaLoanForgivenessMessageController sbaLoanForgivenessMessageController =
+                    new SbaLoanForgivenessMessageController(new SbaLoanForgivenessMessageService(new SbaRestApiClient(baseUri, apiToken, vendorKey)));
+
                 await getDocumentTypes(sbaLoanDocuments);
 
                 await submitLoanDocument(sbaLoanDocuments);
@@ -38,6 +41,12 @@ namespace sbaCSharpClient
                 await getSbaLoanForgiveness(sbaLoanForgiveness);
 
                 await getSbaLoanForgivenessBySlug(sbaLoanForgiveness);
+
+                await updateSbaLoanMessageReply(sbaLoanForgivenessMessageController);
+
+                await getSbaLoanMessages(sbaLoanForgivenessMessageController);
+
+                await getLoanMessagesBySlug(sbaLoanForgivenessMessageController);
 
             }
             catch (Exception exception)
@@ -246,6 +255,53 @@ namespace sbaCSharpClient
             {
                 var serialized = JsonConvert.SerializeObject(documentTypes,
                     new JsonSerializerSettings() {DateFormatHandling = DateFormatHandling.IsoDateFormat});
+                Console.WriteLine($"{Environment.NewLine}{serialized}{Environment.NewLine}");
+                Console.WriteLine("------------------------------------------------------------------------");
+            }
+        }
+
+        private static async Task updateSbaLoanMessageReply(SbaLoanForgivenessMessageController sbaLoanForgivenessMessageController)
+        {
+            MessageReply message = new MessageReply();
+
+            MessageReply sbaLoanMessageReply =
+                await sbaLoanForgivenessMessageController.updateSbaLoanMessageReply(message,
+                    "ppp_loan_forgiveness_message_reply");
+
+            if (sbaLoanMessageReply != null)
+            {
+                var serialized = JsonConvert.SerializeObject(sbaLoanMessageReply,
+                    new JsonSerializerSettings() { DateFormatHandling = DateFormatHandling.IsoDateFormat });
+                Console.WriteLine($"{Environment.NewLine}{serialized}{Environment.NewLine}");
+                Console.WriteLine("------------------------------------------------------------------------");
+            }
+        }
+
+        private static async Task getSbaLoanMessages(SbaLoanForgivenessMessageController sbaLoanForgivenessMessageController)
+        {
+            SbaPPPLoanMessagesResponse sbaPppLoanMessagesResponse =
+                await sbaLoanForgivenessMessageController.getSbaLoanMessages(1, "test", true,
+                    "ppp_loan_forgiveness_messages");
+
+            if (sbaPppLoanMessagesResponse != null)
+            {
+                var serialized = JsonConvert.SerializeObject(sbaPppLoanMessagesResponse,
+                    new JsonSerializerSettings() { DateFormatHandling = DateFormatHandling.IsoDateFormat });
+                Console.WriteLine($"{Environment.NewLine}{serialized}{Environment.NewLine}");
+                Console.WriteLine("------------------------------------------------------------------------");
+            }
+        }
+
+        private static async Task getLoanMessagesBySlug(SbaLoanForgivenessMessageController sbaLoanForgivenessMessageController)
+        {
+            SbaPPPLoanForgivenessMessage loanMessagesBySlug =
+                await sbaLoanForgivenessMessageController.getLoanMessagesBySlug("test",
+                    "ppp_loan_forgiveness_messages");
+
+            if (loanMessagesBySlug != null)
+            {
+                var serialized = JsonConvert.SerializeObject(loanMessagesBySlug,
+                    new JsonSerializerSettings() { DateFormatHandling = DateFormatHandling.IsoDateFormat });
                 Console.WriteLine($"{Environment.NewLine}{serialized}{Environment.NewLine}");
                 Console.WriteLine("------------------------------------------------------------------------");
             }

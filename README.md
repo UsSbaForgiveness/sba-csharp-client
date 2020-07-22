@@ -1,6 +1,6 @@
 **C# Client Code Usage**
 
-Please refer [API Dictionary URL](https://ussbaforgiveness.github.io/API-Dictionary.html/) for any clarifications related to API request/response attributes.
+Please refer [API Dictionary URL](https://ussbaforgiveness.github.io/API-Dictionary.html) for any clarifications related to API request/response attributes.
 
 C# Client code is provided to make it easier to integrate to SBA APIs.
 

@@ -24,7 +24,7 @@ Clone repository using SourceTree or Git Bash.
 
 ### Step 1: Submit Loan Forgiveness Request ###
 
-### POST API Call using SbaLoanForgivenessService Service and SbaPPPLoanForgiveness Request.###
+### POST API Call using SbaLoanForgivenessService Service and SbaPPPLoanForgiveness Request. ###
 
 ```SbaLoanForgivenessService.execute(SbaPPPLoanForgiveness request)```
 
@@ -34,21 +34,13 @@ Response is same as Request Object `SbaPPPLoanForgiveness` with id and slug are 
 
 Please refer Document - Field mapping diagrams provided in the API Page: https://ussbaforgiveness.github.io/
 
-### **Note**
+### Step 2: Retrieve the document types required for uploading the documents ###
 
-> If you are uploading the documents immediately after Step 1, Response object from Step 1 contains all the information needed so please skip Step 2.
+### To get Document Type make a GET API Call to ###
 
-and continue with Step 3.
+```SbaLoanDocumentService.getDocumentTypes(Dictionary<string, string> reqParams, string loanDocumentTypesUrl)```
 
-### Step 2: Retrieve Loan Forgiveness Request Status and detail ###
-
-### This is a GET API Call to retrieve Sba PPP Loan Forgiveness details submitted in Step 1. ###
-
-```SbaLoanForgivenessService.getLoanStatus(int page, string sbaNumber)```
-
-_page_ is a query parameter ex: 1,2 etc
-
-Response `SbaPPPLoanForgivenessStatusResponse` contains all the requests submitted as part of the Loan Forgiveness Process.
+ _reqParams_: Please refer GET Document Types Rest API at #[API Dictionary URL](https://ussbaforgiveness.github.io/API-Dictionary.html#1-get-document-types)
 
 ### Step 3: Upload Supporting Documentation for a Loan Forgiveness Request ###
 
@@ -58,12 +50,35 @@ a. Need SbaPPPLoanForgiveness Details (Details can be from Step 1 or Step 2)
 
 b. Need Document Type
 
-### To get Document Type make a GET API Call to ###
-
-```SbaLoanDocumentService.getDocumentTypes((Dictionary<string, string> reqParams, string loanDocumentTypesUrl)```
-
- _reqParams_: Please refer GET Document Types API Swagger at #[API Dictionary URL](https://ussbaforgiveness.github.io/API-Dictionary.html#1-get-document-types)
-
 This is a POST API call to upload documents.
 
 ```SbaLoanDocumentService.submitLoanDocument(LoanDocument request)```
+Please refer Upload Forgiveness Document Rest API at #[API Dictionary URL](https://ussbaforgiveness.github.io/API-Dictionary.html#3-upload-forgiveness-documents)
+
+### Step 4: Retrieve Loan Forgiveness Request Status and detail ###
+
+### This is a GET API Call to retrieve Sba PPP Loan Forgiveness details submitted in Step 1. ###
+
+```SbaLoanForgivenessService.getLoanStatus(int page, string sbaNumber)```
+
+_page_ is a query parameter ex: 1,2 etc
+
+Response `SbaPPPLoanForgivenessStatusResponse` contains all the requests submitted as part of the Loan Forgiveness Process.
+Please refer Retrieve Forgiveness Request Rest API at #[API Dictionary URL](https://ussbaforgiveness.github.io/API-Dictionary.html#6-get-forgiveness-request-details-using-sba-number)
+
+### Some more API Samples ###
+
+### Get SBA Messages
+### During review of a Forgiveness request, SBA may require additional information from lender. This API is used to retrieve all messages sent by SBA to lender. ###
+
+```SbaLoanForgivenessMessageService.getSbaLoanMessages(int page, String sbaNumber, bool isComplete, string loanForgivenessMessageUrl)```
+
+Response `SbaPPPLoanMessagesResponse` contains all the messages exchanged between SBA and the lender
+Please refer Get SBA Messages Rest API at #[API Dictionary URL](https://ussbaforgiveness.github.io/API-Dictionary.html#8-get-forgiveness-messages)
+
+### Reply SBA Messages
+### During review of a Forgiveness request, SBA may require additional information from lender. This API is used by lender to respond back to SBA by attaching requested documents. ###
+
+```SbaLoanForgivenessMessageService.updateSbaLoanForgivenessMessageReply(MessageReply request, string loanForgivenessMessageUrl)```
+
+Please refer Reply SBA Messages Rest API at #[API Dictionary URL](https://ussbaforgiveness.github.io/API-Dictionary.html#10-reply-to-sba-message)

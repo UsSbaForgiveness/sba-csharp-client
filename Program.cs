@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -18,7 +18,7 @@ namespace sbaCSharpClient
                 string baseUri = "", // to be passed 
                     apiToken = "", // to be passed 
                     vendorKey = ""; // to be passed
-                
+
                 SbaLoanDocumentsController sbaLoanDocuments =
                     new SbaLoanDocumentsController(new SbaLoanDocumentService(new SbaRestApiClient(baseUri, apiToken, vendorKey)));
 
@@ -33,7 +33,7 @@ namespace sbaCSharpClient
                 await submitLoanDocument(sbaLoanDocuments);
 
                 await getSbaLoanDocumentTypeById(sbaLoanDocuments);
- 
+
                 await invokeSbaLoanForgiveness(sbaLoanForgiveness);
 
                 await getSbaLoanRequestStatus(sbaLoanForgiveness);
@@ -41,6 +41,8 @@ namespace sbaCSharpClient
                 await getSbaLoanForgiveness(sbaLoanForgiveness);
 
                 await getSbaLoanForgivenessBySlug(sbaLoanForgiveness);
+
+                deleteSbaLoanForgiveness(sbaLoanForgiveness);
 
                 await updateSbaLoanMessageReply(sbaLoanForgivenessMessageController);
 
@@ -63,12 +65,12 @@ namespace sbaCSharpClient
         private static async Task getSbaLoanRequestStatus(SbaLoanForgivenessController sbaLoanForgiveness)
         {
             SbaPPPLoanDocumentTypeResponse loanDocumentType =
-                await sbaLoanForgiveness.getSbaLoanRequestStatus(2,"1,",
+                await sbaLoanForgiveness.getSbaLoanRequestStatus(2, "1,",
                     "ppp_loan_document_types"); // loanForgivenessUrl - to be passed
             if (loanDocumentType != null)
             {
                 var serialized = JsonConvert.SerializeObject(loanDocumentType,
-                    new JsonSerializerSettings() {DateFormatHandling = DateFormatHandling.IsoDateFormat});
+                    new JsonSerializerSettings() { DateFormatHandling = DateFormatHandling.IsoDateFormat });
                 Console.WriteLine($"{Environment.NewLine}{serialized}{Environment.NewLine}");
                 Console.WriteLine("------------------------------------------------------------------------");
             }
@@ -87,7 +89,7 @@ namespace sbaCSharpClient
                 Console.WriteLine("------------------------------------------------------------------------");
             }
         }
-        
+
         private static async Task getSbaLoanForgivenessBySlug(SbaLoanForgivenessController sbaLoanForgiveness)
         {
             SbaPPPLoanForgiveness loanDocumentType =
@@ -100,6 +102,12 @@ namespace sbaCSharpClient
                 Console.WriteLine($"{Environment.NewLine}{serialized}{Environment.NewLine}");
                 Console.WriteLine("------------------------------------------------------------------------");
             }
+        }
+
+        private static void deleteSbaLoanForgiveness(SbaLoanForgivenessController sbaLoanForgiveness)
+        {
+            sbaLoanForgiveness.deleteSbaLoanForgiveness("2", "ppp_loan_document_types"); // loanForgivenessUrl - to be passed
+            Console.WriteLine("------------------------------------------------------------------------");
         }
 
         private static async Task invokeSbaLoanForgiveness(SbaLoanForgivenessController sbaLoanForgiveness)
@@ -192,7 +200,7 @@ namespace sbaCSharpClient
             if (sbaPppLoanForgiveness != null)
             {
                 var serialized = JsonConvert.SerializeObject(sbaPppLoanForgiveness,
-                    new JsonSerializerSettings() {DateFormatHandling = DateFormatHandling.IsoDateFormat});
+                    new JsonSerializerSettings() { DateFormatHandling = DateFormatHandling.IsoDateFormat });
                 Console.WriteLine($"{Environment.NewLine}{serialized}{Environment.NewLine}");
                 Console.WriteLine("------------------------------------------------------------------------");
             }
@@ -223,7 +231,7 @@ namespace sbaCSharpClient
             if (loanDocument != null)
             {
                 var serialized = JsonConvert.SerializeObject(loanDocument,
-                    new JsonSerializerSettings() {DateFormatHandling = DateFormatHandling.IsoDateFormat});
+                    new JsonSerializerSettings() { DateFormatHandling = DateFormatHandling.IsoDateFormat });
                 Console.WriteLine($"{Environment.NewLine}{serialized}{Environment.NewLine}");
                 Console.WriteLine("------------------------------------------------------------------------");
             }
@@ -254,7 +262,7 @@ namespace sbaCSharpClient
             if (documentTypes != null)
             {
                 var serialized = JsonConvert.SerializeObject(documentTypes,
-                    new JsonSerializerSettings() {DateFormatHandling = DateFormatHandling.IsoDateFormat});
+                    new JsonSerializerSettings() { DateFormatHandling = DateFormatHandling.IsoDateFormat });
                 Console.WriteLine($"{Environment.NewLine}{serialized}{Environment.NewLine}");
                 Console.WriteLine("------------------------------------------------------------------------");
             }

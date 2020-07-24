@@ -41,5 +41,11 @@ namespace sbaCSharpClient.controller
             Task<SbaPPPLoanForgiveness> response = sbaLoanForgivenessService.getSbaLoanForgivenessBySlug(slug, loanForgivenessUrl);
             return response;
         }
+        
+        public void deleteSbaLoanForgiveness(string slug, string loanForgivenessUrl)
+        {
+            Console.WriteLine("Get Request Received.");
+            sbaLoanForgivenessService.deleteSbaLoanForgiveness(slug, loanForgivenessUrl);
+        }
     }
 }

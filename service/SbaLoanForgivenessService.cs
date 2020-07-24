@@ -37,5 +37,11 @@ namespace sbaCSharpClient.service
             Console.WriteLine("Retreiving Sba Loan Forgiveness request");
             return sbaRestApiClient.getSbaLoanForgivenessBySlug(slug, loanForgivenessUrl);
         }
+        
+        public void deleteSbaLoanForgiveness(string slug, string loanForgivenessUrl)
+        {
+            Console.WriteLine("Retreiving Sba Loan Forgiveness request");
+            sbaRestApiClient.deleteSbaLoanForgiveness(slug, loanForgivenessUrl);
+        }
     }
 }

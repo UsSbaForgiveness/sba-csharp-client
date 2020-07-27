@@ -15,9 +15,9 @@ namespace sbaCSharpClient
         {
             try
             {
-                string baseUri = "", // to be passed 
-                    apiToken = "", // to be passed 
-                    vendorKey = ""; // to be passed
+                string baseUri = "https://sandbox.forgiveness.sba.gov/api/", // to be passed 
+                    apiToken = "Token 9944b09199c62bcf9418ad846dd0e4bbdfc6ee4b", // to be passed 
+                    vendorKey = "b4784996-c592-4794-b9fe-3c51e6acd49d"; // to be passed
 
                 SbaLoanDocumentsController sbaLoanDocuments =
                     new SbaLoanDocumentsController(new SbaLoanDocumentService(new SbaRestApiClient(baseUri, apiToken, vendorKey)));

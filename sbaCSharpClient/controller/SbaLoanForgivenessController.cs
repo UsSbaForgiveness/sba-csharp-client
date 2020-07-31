@@ -21,17 +21,24 @@ namespace sbaCSharpClient.controller
             return response;
         }
 
-        public Task<SbaPPPLoanDocumentTypeResponse> getSbaLoanRequestStatus(int page, string sbaNumber, string loanForgivenessUrl)
+        public Task<SbaPPPLoanDocumentTypeResponse> getDocumenttypes(string loanForgivenessUrl)
         {
             Console.WriteLine("Get Request Received.");
-            Task<SbaPPPLoanDocumentTypeResponse> response = sbaLoanForgivenessService.getLoanStatus(page, sbaNumber, loanForgivenessUrl);
+            Task<SbaPPPLoanDocumentTypeResponse> response = sbaLoanForgivenessService.getDocumenttypes(loanForgivenessUrl);
             return response;
         }
-        
-        public Task<SbaPPPLoanForgiveness> getSbaLoanForgiveness(string sbaNumber, string loanForgivenessUrl)
+
+        public Task<SbaPPPLoanForgivenessStatusResponse> getAllForgivenessRequests( string ppp_loan_forgiveness_requests)
         {
             Console.WriteLine("Get Request Received.");
-            Task<SbaPPPLoanForgiveness> response = sbaLoanForgivenessService.getSbaLoanForgiveness(sbaNumber, loanForgivenessUrl);
+            Task<SbaPPPLoanForgivenessStatusResponse> response = sbaLoanForgivenessService.getAllForgivenessRequests(ppp_loan_forgiveness_requests);
+            return response;
+        }
+
+        public Task<SbaPPPLoanForgivenessStatusResponse> getForgivenessRequestBysbaNumber(string sbaNumber, string ppp_loan_forgiveness_requests)
+        {
+            Console.WriteLine("Get Request Received.");
+            Task<SbaPPPLoanForgivenessStatusResponse> response = sbaLoanForgivenessService.getForgivenessRequestBysbaNumber(sbaNumber, ppp_loan_forgiveness_requests);
             return response;
         }
         
@@ -42,10 +49,10 @@ namespace sbaCSharpClient.controller
             return response;
         }
         
-        public void deleteSbaLoanForgiveness(string slug, string loanForgivenessUrl)
+        public async Task<bool> deleteSbaLoanForgiveness(string slug, string loanForgivenessUrl)
         {
-            Console.WriteLine("Get Request Received.");
-            sbaLoanForgivenessService.deleteSbaLoanForgiveness(slug, loanForgivenessUrl);
+            Console.WriteLine("Delete Request Received.");
+            return await sbaLoanForgivenessService.deleteSbaLoanForgiveness(slug, loanForgivenessUrl);
         }
     }
 }

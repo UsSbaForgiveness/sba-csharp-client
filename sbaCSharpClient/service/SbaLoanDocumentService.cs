@@ -15,10 +15,10 @@ namespace sbaCSharpClient.service
             this.sbaRestApiClient = sbaRestApiClient;
         }
 
-        public Task<LoanDocument> submitLoanDocument(LoanDocument request, string loanDocumentsUrl)
+        public Task<LoanDocumentResponse> uploadForgivenessDocument(string requestName, string requestDocument_type, string etran_loan, string document,  string loanDocumentsUrl)
         {
             Console.WriteLine("Processing Loan Document Submission.");
-            return sbaRestApiClient.invokeSbaLoanDocument(request, loanDocumentsUrl);
+            return sbaRestApiClient.uploadForgivenessDocument( requestName,  requestDocument_type,  etran_loan,  document, loanDocumentsUrl);
         }
 
         public Task<SbaPPPLoanDocumentTypeResponse> getDocumentTypes(Dictionary<string, string> reqParams, string loanDocumentTypesUrl)
@@ -29,7 +29,7 @@ namespace sbaCSharpClient.service
         
         public Task<LoanDocumentType> getSbaLoanDocumentTypeById(int id, string loanDocumentTypesUrl)
         {
-            Console.WriteLine("Retreiving Sba Loan Document Types");
+            Console.WriteLine("Retreiving Sba Loan Document Type by Id");
             return sbaRestApiClient.getSbaLoanDocumentTypeById(id, loanDocumentTypesUrl);
         }
     }

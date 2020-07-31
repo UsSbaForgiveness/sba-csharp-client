@@ -9,9 +9,9 @@ namespace sbaCSharpClient.domain
 
         public string name { get; set; }
 
-        public DateTime created_at { get; set; }
+        public DateTime? created_at { get; set; }
 
-        public DateTime updated_at { get; set; }
+        public DateTime? updated_at { get; set; }
 
         public string document { get; set; }
 
@@ -20,7 +20,6 @@ namespace sbaCSharpClient.domain
         public string etran_loan { get; set; }
 
         public LoanDocumentType document_type { get; set; }
-
 
     }
 }

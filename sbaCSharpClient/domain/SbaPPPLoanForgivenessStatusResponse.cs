@@ -16,6 +16,5 @@ namespace sbaCSharpClient.domain
 
         public DateTime created{ get; set;}
 
-        public string assigned_to_user{ get; set;}
     }
 }

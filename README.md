@@ -56,7 +56,7 @@ This example is part of a sample [Use Case 1](https://ussbaforgiveness.github.io
 
 ### To upload the documents ###
 
-a. Need SbaPPPLoanForgiveness Details (Details can be derived from Step 1)
+a. Need SbaPPPLoanForgiveness Details (Details can be derived from Step 1) <br/>
 b. Need Document Type (Details can be derived from Step 2)
 
 This is a POST API call to upload documents.

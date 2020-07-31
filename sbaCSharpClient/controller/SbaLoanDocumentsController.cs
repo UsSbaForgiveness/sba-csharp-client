@@ -23,16 +23,15 @@ namespace sbaCSharpClient.controller
         }
 
 
-        public Task<LoanDocument> submitLoanDocument(LoanDocument request, string loanDocumentsUrl)
+        public Task<LoanDocumentResponse> uploadForgivenessDocument(string requestName, string requestDocument_type, string etran_loan, string document, string loanDocumentsUrl)
         {
             Console.WriteLine("Submit Loan Document.");
-            Task<LoanDocument> document = sbaLoanDocumentService.submitLoanDocument(request, loanDocumentsUrl);
-            return document;
+            Task<LoanDocumentResponse> loanDocument = sbaLoanDocumentService.uploadForgivenessDocument(requestName, requestDocument_type, etran_loan, document,  loanDocumentsUrl);
+            return loanDocument;
         }
         
         public Task<LoanDocumentType> getSbaLoanDocumentTypeById(int id, string loanDocumentsUrl)
         {
-            Console.WriteLine("Submit Loan Document.");
             Task<LoanDocumentType> document = sbaLoanDocumentService.getSbaLoanDocumentTypeById(id, loanDocumentsUrl);
             return document;
         }

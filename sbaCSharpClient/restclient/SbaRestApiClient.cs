@@ -24,7 +24,7 @@ namespace sbaCSharpClient.restclient
             vendorKey = VendorKey;
         }
 
-        public async Task<SbaPPPLoanForgiveness> invokeSbaLoanForgiveness(SbaPPPLoanForgiveness request, string loanForgivenessUrl)
+        public async Task<SbaPPPLoanForgiveness> CreateForgivenessRequest(SbaPPPLoanForgiveness request, string loanForgivenessUrl)
         {
             try
             {
@@ -54,24 +54,25 @@ namespace sbaCSharpClient.restclient
             }
         }
 
-        public async Task<LoanDocument> invokeSbaLoanDocument(LoanDocument request, string loanDocumentsUrl)
+        public async Task<LoanDocumentResponse> uploadForgivenessDocument(string requestName,string requestDocument_type,string etran_loan, string document, string loanDocumentsUrl)
         {
             try
-            {
-                var serialized = JsonConvert.SerializeObject(request, new JsonSerializerSettings() { DateFormatHandling = DateFormatHandling.IsoDateFormat });
-
+            {                
                 RestClient restClient = new RestClient($"{baseUri}/{loanDocumentsUrl}/");
                 restClient.Timeout = -1;
                 RestRequest restRequest = new RestRequest(Method.POST);
                 restRequest.AddHeader("Authorization", apiToken);
                 restRequest.AddHeader(VENDOR_KEY, vendorKey);
-                restRequest.AddHeader("Content-Type", "application/json");
-                restRequest.AddParameter("application/json", serialized, ParameterType.RequestBody);
+                restRequest.AddParameter("name", requestName);
+                restRequest.AddParameter("document_type", requestDocument_type);
+                restRequest.AddParameter("etran_loan", etran_loan);
+                restRequest.AddFile("document", document);
+
                 IRestResponse response = await restClient.ExecuteAsync(restRequest);
 
                 if (response.IsSuccessful)
                 {
-                    LoanDocument loanDocument = JsonConvert.DeserializeObject<LoanDocument>(response.Content);
+                    LoanDocumentResponse loanDocument = JsonConvert.DeserializeObject<LoanDocumentResponse>(response.Content);
                     return loanDocument;
                 }
                 throw new Exception($"Did not receive success code. please investigate. \nresponse code: {response.StatusCode}.\n response:{response.Content}");
@@ -84,18 +85,11 @@ namespace sbaCSharpClient.restclient
             }
         }
 
-        public async Task<SbaPPPLoanDocumentTypeResponse> getSbaLoanForgiveness(int pageNumber, string sbaNumber, string loanForgivenessUrl)
+        public async Task<SbaPPPLoanDocumentTypeResponse> getSbaLoanForgiveness(string loanForgivenessUrl)
         {
             try
-            {
-                if (pageNumber <= 0)
-                {
-                    throw new Exception("Incorrect input data. please investigate");
-                }
-                
-                string baseUrl = !string.IsNullOrEmpty(sbaNumber)
-                    ? $"{baseUri}/{loanForgivenessUrl}?pageNumber={pageNumber}&sbaNumber={sbaNumber}"
-                    : $"{baseUri}/{loanForgivenessUrl}?pageNumber={pageNumber}";
+            {               
+                string baseUrl = $"{baseUri}/{loanForgivenessUrl}/";
 
                 RestClient restClient = new RestClient(baseUrl);
                 restClient.Timeout = -1;
@@ -110,7 +104,7 @@ namespace sbaCSharpClient.restclient
                     SbaPPPLoanDocumentTypeResponse loanDocumentTypeResponse = JsonConvert.DeserializeObject<SbaPPPLoanDocumentTypeResponse>(restResponse.Content);
                     return loanDocumentTypeResponse;
                 }
-                throw new Exception($"Did not receive success code. please investigate. received response code: {restResponse.StatusCode}");
+                throw new Exception($"Did not receive success code. please investigate. received response: {Environment.NewLine}StatusCode - {restResponse.StatusCode}{Environment.NewLine}Response - {restResponse.Content}");
             }
             catch (Exception exception)
             {
@@ -119,17 +113,12 @@ namespace sbaCSharpClient.restclient
                 return null;
             }
         }
-        
-        public async Task<SbaPPPLoanForgiveness> getSbaLoanForgiveness(string sbaNumber, string loanForgivenessUrl)
+
+        public async Task<SbaPPPLoanForgivenessStatusResponse> getAllForgivenessRequests(string ppp_loan_forgiveness_requests)
         {
             try
             {
-                if (string.IsNullOrEmpty(sbaNumber))
-                {
-                    throw new Exception("Incorrect input data. please investigate");
-                }
-                
-                RestClient restClient = new RestClient($"{baseUri}/{loanForgivenessUrl}?sbaNumber={sbaNumber}");
+                RestClient restClient = new RestClient($"{baseUri}/{ppp_loan_forgiveness_requests}/");
                 restClient.Timeout = -1;
                 RestRequest restRequest = new RestRequest(Method.GET);
                 restRequest.AddHeader("Authorization", apiToken);
@@ -139,10 +128,38 @@ namespace sbaCSharpClient.restclient
 
                 if (restResponse.IsSuccessful)
                 {
-                    SbaPPPLoanForgiveness sbaLoanForgiveness = JsonConvert.DeserializeObject<SbaPPPLoanForgiveness>(restResponse.Content);
+                    SbaPPPLoanForgivenessStatusResponse sbaLoanForgiveness = JsonConvert.DeserializeObject<SbaPPPLoanForgivenessStatusResponse>(restResponse.Content);
                     return sbaLoanForgiveness;
                 }
-                throw new Exception($"Did not receive success code. please investigate. received response code: {restResponse.StatusCode}");
+                throw new Exception($"Did not receive success code. please investigate. received response: {Environment.NewLine}StatusCode - {restResponse.StatusCode}{Environment.NewLine}Response - {restResponse.Content}");
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine($"{Environment.NewLine}{exception.Message}{Environment.NewLine}");
+                Console.WriteLine("------------------------------------------------------------------------");
+                return null;
+            }
+        }
+
+        public async Task<SbaPPPLoanForgivenessStatusResponse> getForgivenessRequestBysbaNumber(string sbaNumber, string ppp_loan_forgiveness_requests)
+        {
+            try
+            {   
+                RestClient restClient = new RestClient($"{baseUri}/{ppp_loan_forgiveness_requests}/");
+                restClient.Timeout = -1;
+                RestRequest restRequest = new RestRequest(Method.GET);
+                restRequest.AddHeader("Authorization", apiToken);
+                restRequest.AddHeader(VENDOR_KEY, vendorKey);
+                restRequest.AddHeader("Content-Type", "application/json");
+                restRequest.AddParameter("sba_number", sbaNumber);
+                IRestResponse restResponse = await restClient.ExecuteAsync(restRequest);
+
+                if (restResponse.IsSuccessful)
+                {
+                    SbaPPPLoanForgivenessStatusResponse sbaLoanForgiveness = JsonConvert.DeserializeObject<SbaPPPLoanForgivenessStatusResponse>(restResponse.Content);
+                    return sbaLoanForgiveness;
+                }
+                throw new Exception($"Did not receive success code. please investigate. received response: {Environment.NewLine}StatusCode - {restResponse.StatusCode}{Environment.NewLine}Response - {restResponse.Content}");
             }
             catch (Exception exception)
             {
@@ -161,7 +178,7 @@ namespace sbaCSharpClient.restclient
                     throw new Exception("Incorrect input data. please investigate");
                 }
 
-                RestClient restClient = new RestClient($"{baseUri}/{loanForgivenessUrl}?slug={slug}");
+                RestClient restClient = new RestClient($"{baseUri}/{loanForgivenessUrl}/{slug}/");
                 restClient.Timeout = -1;
                 RestRequest restRequest = new RestRequest(Method.GET);
                 restRequest.AddHeader("Authorization", apiToken);
@@ -171,10 +188,13 @@ namespace sbaCSharpClient.restclient
 
                 if (restResponse.IsSuccessful)
                 {
+                    Console.WriteLine($"{Environment.NewLine}{restResponse.Content}{Environment.NewLine}");
+                    Console.WriteLine("------------------------------------------------------------------------");
+
                     SbaPPPLoanForgiveness sbaLoanForgiveness = JsonConvert.DeserializeObject<SbaPPPLoanForgiveness>(restResponse.Content);
                     return sbaLoanForgiveness;
                 }
-                throw new Exception($"Did not receive success code. please investigate. received response code: {restResponse.StatusCode}");
+                throw new Exception($"Did not receive success code. please investigate. received response: {Environment.NewLine}StatusCode - {restResponse.StatusCode}{Environment.NewLine}Response - {restResponse.Content}");
             }
             catch (Exception exception)
             {
@@ -184,7 +204,7 @@ namespace sbaCSharpClient.restclient
             }
         }
 
-        public async void deleteSbaLoanForgiveness(string slug, string loanForgivenessUrl)
+        public async Task<bool> deleteSbaLoanForgiveness(string slug, string loanForgivenessUrl)
         {
             try
             {
@@ -193,7 +213,7 @@ namespace sbaCSharpClient.restclient
                     throw new Exception("Incorrect input data. please investigate");
                 }
 
-                RestClient restClient = new RestClient($"{baseUri}/{loanForgivenessUrl}?slug={slug}");
+                RestClient restClient = new RestClient($"{baseUri}/{loanForgivenessUrl}/{slug}/");
                 restClient.Timeout = -1;
                 RestRequest restRequest = new RestRequest(Method.DELETE);
                 restRequest.AddHeader("Authorization", apiToken);
@@ -205,13 +225,15 @@ namespace sbaCSharpClient.restclient
                 {
                     Console.WriteLine($"{Environment.NewLine}Delete was successful{Environment.NewLine}");
                     Console.WriteLine("------------------------------------------------------------------------");
+                    return true;
                 }
-                throw new Exception($"Did not receive success code. please investigate. received response code: {restResponse.StatusCode}");
+                throw new Exception($"Did not receive success code. please investigate. received response: {Environment.NewLine}StatusCode - {restResponse.StatusCode}{Environment.NewLine}Response - {restResponse.Content}");
             }
             catch (Exception exception)
             {
                 Console.WriteLine($"{Environment.NewLine}{exception.Message}{Environment.NewLine}");
                 Console.WriteLine("------------------------------------------------------------------------");
+                return false;
             }
         }
         
@@ -239,7 +261,7 @@ namespace sbaCSharpClient.restclient
                     SbaPPPLoanDocumentTypeResponse documentTypeResponse = JsonConvert.DeserializeObject<SbaPPPLoanDocumentTypeResponse>(restResponse.Content);
                     return documentTypeResponse;
                 }
-                throw new Exception($"Did not receive success code. please investigate. received response code: {restResponse.StatusCode}");
+                throw new Exception($"Did not receive success code. please investigate. received response: {Environment.NewLine}StatusCode - {restResponse.StatusCode}{Environment.NewLine}Response - {restResponse.Content}");
             }
             catch (Exception exception)
             {
@@ -258,7 +280,7 @@ namespace sbaCSharpClient.restclient
                     throw new Exception("Incorrect input data. please investigate");
                 }
 
-                RestClient restClient = new RestClient($"{baseUri}/{loanForgivenessUrl}?id={id}");
+                RestClient restClient = new RestClient($"{baseUri}/{loanForgivenessUrl}/{id}/");
                 restClient.Timeout = -1;
                 RestRequest restRequest = new RestRequest(Method.GET);
                 restRequest.AddHeader("Authorization", apiToken);
@@ -271,7 +293,7 @@ namespace sbaCSharpClient.restclient
                     LoanDocumentType loanDocumentType = JsonConvert.DeserializeObject<LoanDocumentType>(restResponse.Content);
                     return loanDocumentType;
                 }
-                throw new Exception($"Did not receive success code. please investigate. received response code: {restResponse.StatusCode}");
+                throw new Exception($"Did not receive success code. please investigate. received response: {Environment.NewLine}StatusCode - {restResponse.StatusCode}{Environment.NewLine}Response - {restResponse.Content}");
             }
             catch (Exception exception)
             {
@@ -281,25 +303,24 @@ namespace sbaCSharpClient.restclient
             }
         }
 
-        public async Task<MessageReply> updateSbaLoanForgivenessMessageReply(MessageReply request, string loanForgivenessMessageUrl)
+        public async Task<string> replyToSbaMessage(MessageReply request, string slug, string loanForgivenessMessageUrl)
         {
             try
             {
-                var serialized = JsonConvert.SerializeObject(request, new JsonSerializerSettings() { DateFormatHandling = DateFormatHandling.IsoDateFormat });
-
-                RestClient restClient = new RestClient($"{baseUri}/{loanForgivenessMessageUrl}/");
+                RestClient restClient = new RestClient($"{baseUri}/{loanForgivenessMessageUrl}/{slug}/");
                 restClient.Timeout = -1;
-                RestRequest restRequest = new RestRequest(Method.POST);
+                RestRequest restRequest = new RestRequest(Method.PUT);
                 restRequest.AddHeader("Authorization", apiToken);
-                restRequest.AddHeader(VENDOR_KEY, vendorKey);
-                restRequest.AddHeader("Content-Type", "application/json");
-                restRequest.AddParameter("application/json", serialized, ParameterType.RequestBody);
+                restRequest.AddHeader(VENDOR_KEY, vendorKey); 
+                restRequest.AddParameter("document_name", request.document_name);
+                restRequest.AddParameter("document_type", request.document_type);
+                restRequest.AddParameter("content", request.content);
+                restRequest.AddFile("document", request.document);
                 IRestResponse response = await restClient.ExecuteAsync(restRequest);
 
                 if (response.IsSuccessful)
                 {
-                    MessageReply sbaLoanForgivenessMessageReply = JsonConvert.DeserializeObject<MessageReply>(response.Content);
-                    return sbaLoanForgivenessMessageReply;
+                    return response.Content;
                 }
                 throw new Exception($"Did not receive success code. please investigate. \nresponse code: {response.StatusCode}.\n response:{response.Content}");
             }
@@ -307,11 +328,11 @@ namespace sbaCSharpClient.restclient
             {
                 Console.WriteLine($"{Environment.NewLine}{exception.Message}{Environment.NewLine}");
                 Console.WriteLine("------------------------------------------------------------------------");
-                return null;
+                return exception.Message;
             }
         }
 
-        public async Task<SbaPPPLoanMessagesResponse> getSbaLoanMessagesBySbaNumber(int page, string sbaNumber, bool isComplete, string loanForgivenessMessageUrl)
+        public async Task<SbaPPPLoanMessagesResponse> getForgivenessMessagesBySbaNumber(int page, string sbaNumber, bool isComplete, string loanForgivenessMessageUrl)
         {
             try
             {
@@ -320,13 +341,16 @@ namespace sbaCSharpClient.restclient
                     throw new Exception("Incorrect input data. please investigate");
                 }
 
-                string baseUrl = $"{baseUri}/{loanForgivenessMessageUrl}?page={page}&sbaNumber={sbaNumber}&isComplete={isComplete}";
+                string baseUrl = $"{baseUri}/{loanForgivenessMessageUrl}/";
 
                 RestClient restClient = new RestClient(baseUrl);
                 restClient.Timeout = -1;
                 RestRequest restRequest = new RestRequest(Method.GET);
                 restRequest.AddHeader("Authorization", apiToken);
                 restRequest.AddHeader(VENDOR_KEY, vendorKey);
+                restRequest.AddParameter("sba_number", sbaNumber);
+                restRequest.AddParameter("page", page);
+                restRequest.AddParameter("isComplete", isComplete);
                 restRequest.AddHeader("Content-Type", "application/json");
                 IRestResponse restResponse = await restClient.ExecuteAsync(restRequest);
 
@@ -335,7 +359,7 @@ namespace sbaCSharpClient.restclient
                     SbaPPPLoanMessagesResponse loanMessagesResponse = JsonConvert.DeserializeObject<SbaPPPLoanMessagesResponse>(restResponse.Content);
                     return loanMessagesResponse;
                 }
-                throw new Exception($"Did not receive success code. please investigate. received response code: {restResponse.StatusCode}");
+                throw new Exception($"Did not receive success code. please investigate. received response: {Environment.NewLine}StatusCode - {restResponse.StatusCode}{Environment.NewLine}Response - {restResponse.Content}");
             }
             catch (Exception exception)
             {
@@ -345,11 +369,11 @@ namespace sbaCSharpClient.restclient
             }
         }
 
-        public async Task<SbaPPPLoanForgivenessMessage> getSbaLoanForgivenessMessagesBySlug(string slug, string loanForgivenessMessageUrl)
+        public async Task<SbaPPPLoanMessagesResponse> getForgivenessMessagesBySlug(string slug, string loanForgivenessMessageUrl)
         {
             try
             {
-                string baseUrl = $"{baseUri}/{loanForgivenessMessageUrl}?slug={slug}";
+                string baseUrl = $"{baseUri}/{loanForgivenessMessageUrl}/{slug}/";
 
                 RestClient restClient = new RestClient(baseUrl);
                 restClient.Timeout = -1;
@@ -361,10 +385,10 @@ namespace sbaCSharpClient.restclient
 
                 if (restResponse.IsSuccessful)
                 {
-                    SbaPPPLoanForgivenessMessage loanForgivenessMessage = JsonConvert.DeserializeObject<SbaPPPLoanForgivenessMessage>(restResponse.Content);
-                    return loanForgivenessMessage;
+                    SbaPPPLoanMessagesResponse sbaPPPLoanMessagesResponse = JsonConvert.DeserializeObject<SbaPPPLoanMessagesResponse>(restResponse.Content);
+                    return sbaPPPLoanMessagesResponse;
                 }
-                throw new Exception($"Did not receive success code. please investigate. received response code: {restResponse.StatusCode}");
+                throw new Exception($"Did not receive success code. please investigate. received response: {Environment.NewLine}StatusCode - {restResponse.StatusCode}{Environment.NewLine}Response - {restResponse.Content}");
             }
             catch (Exception exception)
             {

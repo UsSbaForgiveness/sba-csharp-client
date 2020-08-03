@@ -9,13 +9,6 @@ using sbaCSharpClient.service;
 
 namespace sbaCSharpClient
 {
-    public class Program
-    {
-        public static void Main()
-        {
-        }
-    }
-
     public class sbaCSharpClientTest
     {
         public static string BaseUri, ApiToken, VendorKey;

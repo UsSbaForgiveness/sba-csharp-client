@@ -22,7 +22,7 @@ Clone repository using SourceTree or Git Bash.
 
 **Setting up API Token and Vendor Key**
 
-The API-Token and Vendor-key is required for all the operations to be performed in the sandbox environment.
+The API-Token and Vendor-key is required for all the operations to be performed in the sandbox/production environment.
 Update the below properties in  `appSettings.json` with the API-TOKEN and Vendor-key 
 ```
   "api-token": "<API-TOKEN>",

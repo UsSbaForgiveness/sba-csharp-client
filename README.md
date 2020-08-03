@@ -20,15 +20,25 @@ Clone repository using SourceTree or Git Bash.
 
 `$git clone https://github.com/UsSbaForgiveness/sba-csharp-client.git`
 
+**Setting up API Token and Vendor Key**
+
+The API-Token and Vendor-key is required for all the operations to be performed in the sandbox environment.
+Update the below properties in  `appSettings.json` with the API-TOKEN and Vendor-key 
+```
+  "api-token": "<API-TOKEN>",
+  "vendor-key": "<Vendor-Key>",
+  ....
+``` 
+
 ## Below are the basic example steps for Submitting a Forgiveness request to the SBA System ##
 
-### Step 1: Submit Loan Forgiveness Request ###
+### Step 1: Create Forgiveness Request ###
 
 This example is part of a sample [Use Case 1](https://ussbaforgiveness.github.io/UseCases/usecase1-Submission-of-forgiveness-request.html)
 
 ### POST API Call using SbaLoanForgivenessService Service and SbaPPPLoanForgiveness Request. ###
 
-```SbaLoanForgivenessService.execute(SbaPPPLoanForgiveness request)```
+```SbaLoanForgivenessService.execute(SbaPPPLoanForgiveness request, , string loanForgivenessUrl)```
 
 You need to populate SbaPPPLoanForgiveness Request object with all the information provided in the 3508 and 3508EZ documents.
 
@@ -85,7 +95,7 @@ Please refer to [Retrieve Forgiveness Request API](https://ussbaforgiveness.gith
 
 This example is part of a sample [Use Case 5](https://ussbaforgiveness.github.io/UseCases/usecase5-Correctional-Document-Upload.html)
 
-```SbaLoanForgivenessMessageService.getSbaLoanMessages(int page, String sbaNumber, bool isComplete, string loanForgivenessMessageUrl)```
+```SbaLoanForgivenessMessageService.getForgivenessMessagesBySbaNumber(int page, String sbaNumber, bool isComplete, string loanForgivenessMessageUrl)```
 
 Response `SbaPPPLoanMessagesResponse` contains all the messages exchanged between SBA and the lender
 Please refer to [Get SBA Messages API](https://ussbaforgiveness.github.io/API-Dictionary.html#8-get-forgiveness-messages)
@@ -95,6 +105,6 @@ Please refer to [Get SBA Messages API](https://ussbaforgiveness.github.io/API-Di
 
 This example is part of a sample [Use Case 5](https://ussbaforgiveness.github.io/UseCases/usecase5-Correctional-Document-Upload.html)
 
-```SbaLoanForgivenessMessageService.updateSbaLoanForgivenessMessageReply(MessageReply request, string loanForgivenessMessageUrl)```
+```SbaLoanForgivenessMessageService.replyToSbaMessage(MessageReply request, string loanForgivenessMessageUrl)```
 
 Please refer to [Reply SBA Messages Rest API](https://ussbaforgiveness.github.io/API-Dictionary.html#11-reply-to-sba-message)

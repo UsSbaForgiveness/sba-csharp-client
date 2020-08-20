@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using NUnit.Framework;
@@ -190,7 +191,31 @@ namespace sbaCSharpClient.Tests
             string response = await cSharpClientTest.replyToSbaMessage(message, "523ed6d3-7233-40ab-835e-e01f9184dc8f");
             Assert.IsNotNull(response);
         }
-        
+
+        [Test]
+        public async Task replyToSbaMessageWithMultipleDocs()
+        {
+            MessageReplyMultipleFiles message = new MessageReplyMultipleFiles
+            {
+                // enter path to files you want to upload
+                documents = new List<string>() { @"<Path to document file here>", @"<Path to document file here>" },
+
+                // enter name of documents
+                document_names = new List<string>() { "<Document Name>", "<Document Name>" },
+
+                // enter document type of each document
+                document_types = new List<int?>() { Int32.Parse("<Document Type>"), Int32.Parse("<Document Type>") },
+
+                // enter comments for each document
+                contents = new List<string>() {"<message content>", "<message content>"}
+            };
+
+            string slug = "<Enter slug for reply ticket here>";
+
+            string response = await cSharpClientTest.replyToSbaMessageWithMultipleDocs(message, slug);
+            Assert.IsNotNull(response);
+        }
+
         [Test]
         public async Task getForgivenessMessagesBySbaNumber()
         {

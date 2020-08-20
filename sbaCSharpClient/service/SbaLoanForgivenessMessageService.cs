@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using sbaCSharpClient.domain;
 using sbaCSharpClient.restclient;
+using System.Collections.Generic;
 
 namespace sbaCSharpClient.service
 {
@@ -18,6 +19,12 @@ namespace sbaCSharpClient.service
         {
             Console.WriteLine("Processing reply To SbaMessage");
             return sbaRestApiClient.replyToSbaMessage(request, slug, loanForgivenessMessageUrl);
+        }
+
+        public Task<string> replyToSbaMessageWithMultipleDocs(MessageReplyMultipleFiles request, string slug, string loanForgivenessMessageUrl)
+        {
+            Console.WriteLine("Processing reply To SbaMessage with multiple documents");
+            return sbaRestApiClient.replyToSbaMessageWithMultipleDocs(request, slug, loanForgivenessMessageUrl);
         }
 
         public Task<SbaPPPLoanMessagesResponse> getForgivenessMessagesBySbaNumber(int page, String sbaNumber, bool isComplete, string loanForgivenessMessageUrl)

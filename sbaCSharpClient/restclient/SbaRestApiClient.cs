@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using RestSharp;
 using sbaCSharpClient.domain;
+using System.Reflection.Metadata;
+using System.IO;
 
 namespace sbaCSharpClient.restclient
 {
@@ -49,15 +51,15 @@ namespace sbaCSharpClient.restclient
             catch (Exception exception)
             {
                 Console.WriteLine($"{Environment.NewLine}{exception.Message}{Environment.NewLine}");
-                Console.WriteLine("------------------------------------------------------------------------"); 
+                Console.WriteLine("------------------------------------------------------------------------");
                 return null;
             }
         }
 
-        public async Task<LoanDocumentResponse> uploadForgivenessDocument(string requestName,string requestDocument_type,string etran_loan, string document, string loanDocumentsUrl)
+        public async Task<LoanDocumentResponse> uploadForgivenessDocument(string requestName, string requestDocument_type, string etran_loan, string document, string loanDocumentsUrl)
         {
             try
-            {                
+            {
                 RestClient restClient = new RestClient($"{baseUri}/{loanDocumentsUrl}/");
                 restClient.Timeout = -1;
                 RestRequest restRequest = new RestRequest(Method.POST);
@@ -88,7 +90,7 @@ namespace sbaCSharpClient.restclient
         public async Task<SbaPPPLoanDocumentTypeResponse> getSbaLoanForgiveness(string loanForgivenessUrl)
         {
             try
-            {               
+            {
                 string baseUrl = $"{baseUri}/{loanForgivenessUrl}/";
 
                 RestClient restClient = new RestClient(baseUrl);
@@ -109,7 +111,7 @@ namespace sbaCSharpClient.restclient
             catch (Exception exception)
             {
                 Console.WriteLine($"{Environment.NewLine}{exception.Message}{Environment.NewLine}");
-                Console.WriteLine("------------------------------------------------------------------------"); 
+                Console.WriteLine("------------------------------------------------------------------------");
                 return null;
             }
         }
@@ -144,7 +146,7 @@ namespace sbaCSharpClient.restclient
         public async Task<SbaPPPLoanForgivenessStatusResponse> getForgivenessRequestBysbaNumber(string sbaNumber, string ppp_loan_forgiveness_requests)
         {
             try
-            {   
+            {
                 RestClient restClient = new RestClient($"{baseUri}/{ppp_loan_forgiveness_requests}/");
                 restClient.Timeout = -1;
                 RestRequest restRequest = new RestRequest(Method.GET);
@@ -164,7 +166,7 @@ namespace sbaCSharpClient.restclient
             catch (Exception exception)
             {
                 Console.WriteLine($"{Environment.NewLine}{exception.Message}{Environment.NewLine}");
-                Console.WriteLine("------------------------------------------------------------------------"); 
+                Console.WriteLine("------------------------------------------------------------------------");
                 return null;
             }
         }
@@ -236,7 +238,7 @@ namespace sbaCSharpClient.restclient
                 return false;
             }
         }
-        
+
         public async Task<SbaPPPLoanDocumentTypeResponse> getSbaLoanDocumentTypes(Dictionary<string, string> reqParams, string loanDocumentTypesUrl)
         {
             try
@@ -266,7 +268,7 @@ namespace sbaCSharpClient.restclient
             catch (Exception exception)
             {
                 Console.WriteLine($"{Environment.NewLine}{exception.Message}{Environment.NewLine}");
-                Console.WriteLine("------------------------------------------------------------------------"); 
+                Console.WriteLine("------------------------------------------------------------------------");
                 return null;
             }
         }
@@ -311,7 +313,7 @@ namespace sbaCSharpClient.restclient
                 restClient.Timeout = -1;
                 RestRequest restRequest = new RestRequest(Method.PUT);
                 restRequest.AddHeader("Authorization", apiToken);
-                restRequest.AddHeader(VENDOR_KEY, vendorKey); 
+                restRequest.AddHeader(VENDOR_KEY, vendorKey);
                 restRequest.AddParameter("document_name", request.document_name);
                 restRequest.AddParameter("document_type", request.document_type);
                 restRequest.AddParameter("content", request.content);
@@ -322,6 +324,40 @@ namespace sbaCSharpClient.restclient
                 {
                     return response.Content;
                 }
+                throw new Exception($"Did not receive success code. please investigate. \nresponse code: {response.StatusCode}.\n response:{response.Content}");
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine($"{Environment.NewLine}{exception.Message}{Environment.NewLine}");
+                Console.WriteLine("------------------------------------------------------------------------");
+                return exception.Message;
+            }
+        }
+
+        public async Task<string> replyToSbaMessageWithMultipleDocs(MessageReplyMultipleFiles request, string slug, string loanForgivenessMessageUrl)
+        {   
+            try
+            {
+
+                RestClient restClient = new RestClient($"{baseUri}/{loanForgivenessMessageUrl}/{slug}/");
+                restClient.Timeout = -1;
+                RestRequest restRequest = new RestRequest(Method.PUT);
+                
+                restRequest.AddHeader("Authorization", apiToken);
+                restRequest.AddHeader(VENDOR_KEY, vendorKey);
+
+                request.document_names.ForEach(t => restRequest.AddParameter("document_name", t, ParameterType.GetOrPost));
+                request.document_types.ForEach(t => restRequest.AddParameter("document_type", t, ParameterType.GetOrPost));
+                request.documents.ForEach(t => restRequest.AddFile("document", t));
+                request.contents.ForEach(t => restRequest.AddParameter("content", t));
+
+                IRestResponse response = await restClient.ExecuteAsync(restRequest);
+
+                if (response.IsSuccessful)
+                {
+                    return response.Content;
+                }
+
                 throw new Exception($"Did not receive success code. please investigate. \nresponse code: {response.StatusCode}.\n response:{response.Content}");
             }
             catch (Exception exception)

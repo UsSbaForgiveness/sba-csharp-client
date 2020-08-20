@@ -6,6 +6,7 @@ using sbaCSharpClient.controller;
 using sbaCSharpClient.domain;
 using sbaCSharpClient.restclient;
 using sbaCSharpClient.service;
+using System.Collections.Generic;
 
 namespace sbaCSharpClient
 {
@@ -121,6 +122,13 @@ namespace sbaCSharpClient
         {
             string sbaLoanMessageReply =
                 await sbaLoanForgivenessMessageController.replyToSbaMessage(message, slug, pppLoanForgivenessMessageReply);
+            return sbaLoanMessageReply;
+        }
+
+        public async Task<string> replyToSbaMessageWithMultipleDocs(MessageReplyMultipleFiles message, string slug)
+        {
+            string sbaLoanMessageReply = await sbaLoanForgivenessMessageController.replyToSbaMessageWithMultipleDocs(message, slug, pppLoanForgivenessMessageReply);
+            
             return sbaLoanMessageReply;
         }
 

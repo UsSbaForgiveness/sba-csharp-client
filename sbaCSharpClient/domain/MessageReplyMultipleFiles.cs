@@ -14,6 +14,6 @@ namespace sbaCSharpClient.domain
 
         public string etran_loan { get; set; }
 
-        public List<string> contents { get; set; }
+        public string content { get; set; }
     }
 }

@@ -349,7 +349,8 @@ namespace sbaCSharpClient.restclient
                 request.document_names.ForEach(t => restRequest.AddParameter("document_name", t, ParameterType.GetOrPost));
                 request.document_types.ForEach(t => restRequest.AddParameter("document_type", t, ParameterType.GetOrPost));
                 request.documents.ForEach(t => restRequest.AddFile("document", t));
-                request.contents.ForEach(t => restRequest.AddParameter("content", t));
+
+                restRequest.AddParameter("content", request.content, ParameterType.GetOrPost);
 
                 IRestResponse response = await restClient.ExecuteAsync(restRequest);
 

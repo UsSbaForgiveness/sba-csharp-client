@@ -206,8 +206,8 @@ namespace sbaCSharpClient.Tests
                 // enter document type of each document
                 document_types = new List<int?>() { Int32.Parse("<Document Type>"), Int32.Parse("<Document Type>") },
 
-                // enter comments for each document
-                contents = new List<string>() {"<message content>", "<message content>"}
+                // enter comment for the upload
+                content = "<message content>"
             };
 
             string slug = "<Enter slug for reply ticket here>";

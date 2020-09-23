@@ -50,7 +50,7 @@ namespace sbaCSharpClient.Tests
                 {
                     race
                 }
-            };
+             };
 
             SbaPPPLoanForgiveness pppLoanForgiveness = new SbaPPPLoanForgiveness
             {
@@ -126,9 +126,9 @@ namespace sbaCSharpClient.Tests
         [Test]
         public async Task uploadForgivenessDocument()
         {
-            LoanDocumentResponse response = await cSharpClientTest.uploadForgivenessDocument("Ppdf.pdf", "1",
-                "e1805069-9e05-4bc3-9daf-c40159036003",
-                @"C:\Users\Administrator\Desktop\Ppdf.pdf");
+            LoanDocumentResponse response = await cSharpClientTest.uploadForgivenessDocument("<file name>", "1",
+                "<slug>",
+                @"<path to file>");
 
             Assert.IsNotNull(response);
 
@@ -151,7 +151,7 @@ namespace sbaCSharpClient.Tests
         [Test]
         public async Task getForgivenessRequestBySbaNumber()
         {
-            SbaPPPLoanForgivenessStatusResponse response = await cSharpClientTest.getForgivenessRequestBySbaNumber("9999133076");
+            SbaPPPLoanForgivenessStatusResponse response = await cSharpClientTest.getForgivenessRequestBySbaNumber("<sba number>");
             Assert.IsNotNull(response);
 
             string serialized = JsonConvert.SerializeObject(response,
@@ -162,7 +162,7 @@ namespace sbaCSharpClient.Tests
        [Test]
         public async Task getSbaLoanForgivenessBySlug()
         {
-            SbaPPPLoanForgiveness response = await cSharpClientTest.getSbaLoanForgivenessBySlug("c9836abc-f493-4544-ba8d-da1a306a03ce");
+            SbaPPPLoanForgiveness response = await cSharpClientTest.getSbaLoanForgivenessBySlug("<slug>");
             Assert.IsNotNull(response);
 
             string serialized = JsonConvert.SerializeObject(response,
@@ -173,7 +173,7 @@ namespace sbaCSharpClient.Tests
         [Test]
         public async Task deleteSbaLoanForgiveness()
         {
-            bool response = await cSharpClientTest.deleteSbaLoanForgiveness("e58dd70a-8aae-4210-8b26-3047fe02dea2");
+            bool response = await cSharpClientTest.deleteSbaLoanForgiveness("<slug>");
             Assert.IsTrue(response);
         }
         
@@ -182,13 +182,13 @@ namespace sbaCSharpClient.Tests
         {
             MessageReply message = new MessageReply
             {
-                document = @"C:\Users\Administrator\Desktop\Ppdf.pdf",
-                document_name = "Test Document",
+                document = @"<path to file>",
+                document_name = "<document name>",
                 document_type = 4,
-                content = "test1"
+                content = "<content>"
             };
 
-            string response = await cSharpClientTest.replyToSbaMessage(message, "523ed6d3-7233-40ab-835e-e01f9184dc8f");
+            string response = await cSharpClientTest.replyToSbaMessage(message, "<slug>");
             Assert.IsNotNull(response);
         }
 
@@ -198,19 +198,19 @@ namespace sbaCSharpClient.Tests
             MessageReplyMultipleFiles message = new MessageReplyMultipleFiles
             {
                 // enter path to files you want to upload
-                documents = new List<string>() { @"<Path to document file here>", @"<Path to document file here>" },
+                documents = new List<string>() { @"<path to file>", @"<path to file>" },
 
                 // enter name of documents
-                document_names = new List<string>() { "<Document Name>", "<Document Name>" },
+                document_names = new List<string>() { "<document name>", "<document name>" },
 
                 // enter document type of each document
-                document_types = new List<int?>() { Int32.Parse("<Document Type>"), Int32.Parse("<Document Type>") },
+                document_types = new List<int?>() { Int32.Parse("<document type>"), Int32.Parse("<document type>") },
 
                 // enter comment for the upload
-                content = "<message content>"
+                content = "content"
             };
 
-            string slug = "<Enter slug for reply ticket here>";
+            string slug = "<slug>";
 
             string response = await cSharpClientTest.replyToSbaMessageWithMultipleDocs(message, slug);
             Assert.IsNotNull(response);
@@ -219,7 +219,7 @@ namespace sbaCSharpClient.Tests
         [Test]
         public async Task getForgivenessMessagesBySbaNumber()
         {
-            SbaPPPLoanMessagesResponse response = await cSharpClientTest.getForgivenessMessagesBySbaNumber(1, "9999133145", true);
+            SbaPPPLoanMessagesResponse response = await cSharpClientTest.getForgivenessMessagesBySbaNumber(1, "<sba number>", true);
             Assert.IsNotNull(response);
 
             string serialized = JsonConvert.SerializeObject(response,
@@ -230,7 +230,7 @@ namespace sbaCSharpClient.Tests
         [Test]
         public async Task getForgivenessMessagesBySlug()
         {
-            SbaPPPLoanMessagesResponse response = await cSharpClientTest.getForgivenessMessagesBySlug("e58dd70a-8aae-4210-8b26-3047fe02dea2");
+            SbaPPPLoanMessagesResponse response = await cSharpClientTest.getForgivenessMessagesBySlug("<slug>");
             Assert.IsNotNull(response);
 
             string serialized = JsonConvert.SerializeObject(response,

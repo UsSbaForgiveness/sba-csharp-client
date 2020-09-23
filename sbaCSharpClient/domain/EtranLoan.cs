@@ -28,7 +28,7 @@ namespace sbaCSharpClient.domain
 
 		public double? forgive_eidl_amount{ get; set;}
 
-		public int? forgive_eidl_application_number{ get; set;}
+		public long? forgive_eidl_application_number{ get; set;}
 
 		public double? forgive_payroll{ get; set;}
 

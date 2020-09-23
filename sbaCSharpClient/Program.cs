@@ -100,7 +100,7 @@ namespace sbaCSharpClient
 
         public async Task<bool> deleteSbaLoanForgiveness(string slug)
         {
-            return await sbaLoanForgiveness.deleteSbaLoanForgiveness(slug, pppLoanDocumentTypes);
+            return await sbaLoanForgiveness.deleteSbaLoanForgiveness(slug, pppLoanForgivenessRequests);
         }
 
         public async Task<SbaPPPLoanForgiveness> createForgivenessRequest(SbaPPPLoanForgiveness pppLoanForgiveness)

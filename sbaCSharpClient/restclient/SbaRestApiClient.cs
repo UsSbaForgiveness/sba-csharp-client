@@ -30,7 +30,9 @@ namespace sbaCSharpClient.restclient
         {
             try
             {
-                var serialized = JsonConvert.SerializeObject(request, new JsonSerializerSettings() { DateFormatHandling = DateFormatHandling.IsoDateFormat });
+                var serialized = JsonConvert.SerializeObject(request, new JsonSerializerSettings() { 
+                                                                        DateFormatHandling = DateFormatHandling.IsoDateFormat,
+                                                                        NullValueHandling = NullValueHandling.Ignore });
 
                 RestClient restClient = new RestClient($"{baseUri}/{loanForgivenessUrl}/");
                 restClient.Timeout = -1;

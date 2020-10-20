@@ -134,5 +134,7 @@ namespace sbaCSharpClient.domain
 
 		public Organization organization { get; set; }
 
+		public bool? s_form { get; set; }
+
 	}
 }
